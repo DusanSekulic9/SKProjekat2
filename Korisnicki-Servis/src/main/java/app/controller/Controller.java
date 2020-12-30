@@ -4,6 +4,7 @@ import static app.security.SecurityConstants.HEADER_STRING;
 import static app.security.SecurityConstants.SECRET;
 import static app.security.SecurityConstants.TOKEN_PREFIX;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
+import app.email.SendEmail;
 import app.entities.User;
 import app.forms.RegistrationForm;
 import app.repository.UserRepository;
@@ -47,6 +49,8 @@ public class Controller {
 
 			// cuvamo u nasoj bazi ovaj entitet
 			userRepo.saveAndFlush(user);
+			
+			//SendEmail.sendEmail(user.getEmail());
 
 			return new ResponseEntity<>("success", HttpStatus.ACCEPTED);
 		} catch (Exception e) {
@@ -92,7 +96,7 @@ public class Controller {
 			
 			if(registrationForm.getEmail() != null && !registrationForm.getEmail().trim().equals(user.getEmail())) {
 				user.setEmail(registrationForm.getEmail());
-				//slanje na mejl
+				//SendEmail.sendEmail(user.getEmail());
 			}
 			
 			if(registrationForm.getBrojPasosa() != null && !registrationForm.getBrojPasosa().trim().equals(user.getBrojPasosa()))
