@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,6 +71,44 @@ public class Controller {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
+	}
+	
+	
+	@PutMapping("/editProfile")
+	public ResponseEntity<String> editProfile(@RequestBody RegistrationForm registrationForm, @RequestHeader(value = HEADER_STRING) String token) {
+
+		try {
+				
+			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
+					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
+			
+			User user = userRepo.findByEmail(email);
+			
+			if(registrationForm.getIme() != null && !registrationForm.getIme().trim().equals(user.getIme()))
+				user.setIme(registrationForm.getIme());
+			
+			if(registrationForm.getPrezime() != null && !registrationForm.getPrezime().trim().equals(user.getPrezime()))
+				user.setPrezime(registrationForm.getPrezime());
+			
+			if(registrationForm.getEmail() != null && !registrationForm.getEmail().trim().equals(user.getEmail())) {
+				user.setEmail(registrationForm.getEmail());
+				//slanje na mejl
+			}
+			
+			if(registrationForm.getBrojPasosa() != null && !registrationForm.getBrojPasosa().trim().equals(user.getBrojPasosa()))
+				user.setBrojPasosa(registrationForm.getBrojPasosa());
+			
+			if(registrationForm.getPassword() != null && !encoder.encode(registrationForm.getPassword()).equals(user.getPassword()))
+				user.setPassword(registrationForm.getBrojPasosa());
+			
+			userRepo.saveAndFlush(user);
+			
+			return new ResponseEntity<>("success", HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
 	}
 
 }

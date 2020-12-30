@@ -1,21 +1,31 @@
 package app.entities;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="kreditnaKartica")
 public class KreditnaKartica {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private long idKartica;
 	
 	private String ime;
 	private String prezime;
 	private String brKartice;
 	private String sigurnosniBrojKartice;
+	
+	@ManyToOne
+	@JoinColumn(name="idUser")
+	private User user;
 	
 	public KreditnaKartica() {
 		
@@ -32,10 +42,10 @@ public class KreditnaKartica {
 
 
 	public long getId() {
-		return id;
+		return idKartica;
 	}
 	public void setId(long id) {
-		this.id = id;
+		this.idKartica = id;
 	}
 	public String getIme() {
 		return ime;
@@ -61,7 +71,15 @@ public class KreditnaKartica {
 	public void setSigurnosniBrojKartice(String sigurnosniBrojKartice) {
 		this.sigurnosniBrojKartice = sigurnosniBrojKartice;
 	}
+
+	public User getUser() {
+		return user;
+	}
+
 	
+	public void setUser(User user) {
+		this.user = user;
+	}
 	
 	
 }

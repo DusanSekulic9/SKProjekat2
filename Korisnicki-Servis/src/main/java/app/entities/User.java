@@ -7,25 +7,31 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import app.constants.Rank_Constants;
 
 
 @Entity
+@Table(name="user")
 public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private long idUser;
 
 	private String ime;
 	private String prezime;
 	private String email;
 	private String password;
 	private String brojPasosa;
-	private boolean admin = false;
 	private String tip = Rank_Constants.BRONZA;
 	private int predjeneMilje = 0;
+	
+	@OneToMany(mappedBy="user")
+	private List<KreditnaKartica> kreditneKartice;
+	
 
 	//private List<KreditnaKartica> kreditneKartice = new ArrayList<KreditnaKartica>();
 	
@@ -45,15 +51,14 @@ public class User {
 	public User(String email, String password) {
 		this.email = email;
 		this.password = password;
-		this.admin = true;
 	}
 
 	public long getId() {
-		return id;
+		return idUser;
 	}
 
 	public void setId(long id) {
-		this.id = id;
+		this.idUser = id;
 	}
 
 	public String getIme() {
@@ -109,22 +114,12 @@ public class User {
 //	}
 
 
-	public boolean isAdmin() {
-		return admin;
-	}
-
-
-	public void setAdmin(boolean admin) {
-		this.admin = admin;
-	}
-
-
-	public String getRank() {
+	public String getTip() {
 		return tip;
 	}
 
 
-	public void setRank(String rank) {
+	public void setTip(String rank) {
 		this.tip = rank;
 	}
 
@@ -136,6 +131,16 @@ public class User {
 
 	public void setPredjeneMilje(int predjeneMilje) {
 		this.predjeneMilje = predjeneMilje;
+	}
+
+
+	public List<KreditnaKartica> getKreditneKartice() {
+		return kreditneKartice;
+	}
+
+
+	public void setKreditneKartice(List<KreditnaKartica> kreditneKartice) {
+		this.kreditneKartice = kreditneKartice;
 	}
 	
 	
