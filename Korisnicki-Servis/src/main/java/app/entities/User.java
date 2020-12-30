@@ -8,7 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import app.enums.Rank;
+import app.constants.Rank_Constants;
+
 
 @Entity
 public class User {
@@ -23,7 +24,7 @@ public class User {
 	private String password;
 	private String brojPasosa;
 	private boolean admin = false;
-	//private Rank rank = Rank.BRONZE;
+	private String tip = Rank_Constants.BRONZA;
 	private int predjeneMilje = 0;
 
 	//private List<KreditnaKartica> kreditneKartice = new ArrayList<KreditnaKartica>();
@@ -118,16 +119,16 @@ public class User {
 	}
 
 
-//	public Rank getRank() {
-//		return rank;
-//	}
-//
-//
-//	public void setRank(Rank rank) {
-//		this.rank = rank;
-//	}
-//
-//
+	public String getRank() {
+		return tip;
+	}
+
+
+	public void setRank(String rank) {
+		this.tip = rank;
+	}
+
+
 	public int getPredjeneMilje() {
 		return predjeneMilje;
 	}
