@@ -21,8 +21,10 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
 import app.email.SendEmail;
+import app.entities.Admin;
 import app.entities.User;
 import app.forms.RegistrationForm;
+import app.repository.AdminRepository;
 import app.repository.UserRepository;
 
 @RestController
@@ -31,11 +33,16 @@ public class Controller {
 
 	private BCryptPasswordEncoder encoder;
 	private UserRepository userRepo;
+	private AdminRepository adminRepo;
 
 	@Autowired
-	public Controller(BCryptPasswordEncoder encoder, UserRepository userRepo) {
+	public Controller(BCryptPasswordEncoder encoder, UserRepository userRepo, AdminRepository adminRepo) {
 		this.encoder = encoder;
 		this.userRepo = userRepo;
+		this.adminRepo = adminRepo;
+		Admin a = new Admin("root", encoder.encode("123"));
+
+		adminRepo.saveAndFlush(a);
 	}
 
 	@PostMapping("/register")
@@ -60,17 +67,23 @@ public class Controller {
 
 	}
 
-	@GetMapping("/whoAmI")
-	public ResponseEntity<String> whoAmI(@RequestHeader(value = HEADER_STRING) String token) {
+	@GetMapping("/isAdmin")
+	public ResponseEntity<Boolean> isAdmin(@RequestHeader(value = HEADER_STRING) String token) {
 		try {
-
+			System.out.println("provera adminskih prava...");
 			// izvlacimo iz tokena subject koj je postavljen da bude email
-			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
+			String username = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
 					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
+			
+			System.out.println(username);
 
-			User user = userRepo.findByEmail(email);
-
-			return new ResponseEntity<>(user.getIme() + " " + user.getPrezime(), HttpStatus.ACCEPTED);
+			Admin admin = adminRepo.findByUsername(username);
+			
+			if(admin != null)
+				return new ResponseEntity<>(true, HttpStatus.ACCEPTED);
+			else {
+				return new ResponseEntity<>(false, HttpStatus.FORBIDDEN);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

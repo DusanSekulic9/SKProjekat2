@@ -5,9 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+
 @SpringBootApplication
 public class KorisnickiServisApplication {
-	
+
 	@Bean
 	public static BCryptPasswordEncoder encoder() {
 		return new BCryptPasswordEncoder(10);
@@ -15,6 +16,7 @@ public class KorisnickiServisApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(KorisnickiServisApplication.class, args);
+
 	}
 
 }

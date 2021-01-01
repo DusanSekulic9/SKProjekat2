@@ -10,6 +10,7 @@ public final class SecurityConstants {
 
 
 	public static final String LOGIN_PATH = "/login";
+	public static final String ADMIN_LOGIN_PATH = "/isAdminasd";
 	public static final String REGISTRATION_PATH = "/register";
 
 }

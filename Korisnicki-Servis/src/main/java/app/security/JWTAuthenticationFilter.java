@@ -2,10 +2,13 @@ package app.security;
 
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.Date;
 
 import javax.servlet.FilterChain;
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import app.forms.AdminLoginForm;
 import app.forms.Login_Form;
 
 import static app.security.SecurityConstants.*;
@@ -38,8 +42,27 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res)
 			throws AuthenticationException {
 		try {
-
-			Login_Form user = new ObjectMapper().readValue(req.getInputStream(), Login_Form.class);
+			Login_Form user = null;
+			InputStream bufferdInputStream = new BufferedInputStream(req.getInputStream());
+		    bufferdInputStream.mark(0);
+			try {
+				user = new ObjectMapper().readValue(bufferdInputStream.readAllBytes(), Login_Form.class);
+			}catch(Exception e) {
+				
+			}
+			
+		    //read your bufferdInputStream 
+		    bufferdInputStream.reset();
+		    //read it again
+			if(user == null || user.getEmail() == null) {
+				AdminLoginForm alf = new ObjectMapper().readValue(bufferdInputStream.readAllBytes(), AdminLoginForm.class);
+				UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(alf.getUsername(),
+						alf.getPassword(), Collections.emptyList());
+				
+				System.out.println("napravljen token");
+				System.out.println(token);
+				return authenticationManager.authenticate(token);
+			}
 
 			UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getEmail(),
 					user.getPassword(), Collections.emptyList());

@@ -1,5 +1,8 @@
 package app.forms;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties
 public class Login_Form {
 
 	private String email;
@@ -21,4 +24,5 @@ public class Login_Form {
 		this.password = password;
 	}
 
+	 
 }

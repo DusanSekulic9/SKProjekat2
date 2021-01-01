@@ -11,7 +11,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import app.entities.Admin;
 import app.entities.User;
+import app.repository.AdminRepository;
 import app.repository.UserRepository;
 
 @Component
@@ -19,11 +21,13 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 	private PasswordEncoder encoder;
 	private UserRepository userRepo;
+	private AdminRepository adminRepo;
 
 	@Autowired
-	public CustomAuthenticationProvider(UserRepository userRepo) {
+	public CustomAuthenticationProvider(UserRepository userRepo, AdminRepository adminRepo) {
 		super();
 		this.userRepo = userRepo;
+		this.adminRepo = adminRepo;
 	}
 
 	@Override
@@ -32,9 +36,17 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		String password = auth.getCredentials().toString();
 
 		User user = userRepo.findByEmail(email);
-
+		
 		if (user == null) {
-			throw new BadCredentialsException("Authentication failed");
+			Admin admin = adminRepo.findByUsername(email);
+			
+			if(admin == null)
+				throw new BadCredentialsException("Authentication failed");
+			
+			if (encoder.matches(password, admin.getSifra())) {
+				System.out.println("prosao login");
+				return new UsernamePasswordAuthenticationToken(email, password, emptyList());
+			}
 		}
 
 		// proveri sifru
