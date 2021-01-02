@@ -25,6 +25,7 @@ public class Let {
 	private String duzinaLeta;
 	private int cena;
 
+	
 	public Let() {
 
 	}
