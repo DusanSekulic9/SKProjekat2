@@ -24,6 +24,7 @@ public class Let {
 	private String krajnjaDestinacija;
 	private String duzinaLeta;
 	private int cena;
+	private boolean kupiLet=true;
 
 	public Let() {
 
@@ -77,5 +78,16 @@ public class Let {
 	public void setCena(int cena) {
 		this.cena = cena;
 	}
+
+	public boolean isKupiLet() {
+		return kupiLet;
+	}
+
+	public void setKupiLet(boolean kupiLet) {
+		this.kupiLet = kupiLet;
+	}
+	
+	
+	
 
 }

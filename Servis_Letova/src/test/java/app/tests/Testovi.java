@@ -1,10 +1,9 @@
 package app.tests;
 
-import static org.junit.Assert.*;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -30,7 +29,7 @@ public class Testovi {
 
 	public static HttpHeaders headers = new HttpHeaders();
 
-	@Test
+	@org.junit.jupiter.api.Test
 	void napraviAvionTest() {
 		AvionForm avionForm = new AvionForm();
 		
