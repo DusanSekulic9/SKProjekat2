@@ -4,7 +4,6 @@ import static app.security.SecurityConstants.HEADER_STRING;
 import static app.security.SecurityConstants.SECRET;
 import static app.security.SecurityConstants.TOKEN_PREFIX;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +21,12 @@ import com.auth0.jwt.algorithms.Algorithm;
 
 import app.email.SendEmail;
 import app.entities.Admin;
+import app.entities.KreditnaKartica;
 import app.entities.User;
+import app.forms.KKForm;
 import app.forms.RegistrationForm;
 import app.repository.AdminRepository;
+import app.repository.KreditnaKarticaRepo;
 import app.repository.UserRepository;
 
 @RestController
@@ -34,12 +36,14 @@ public class Controller {
 	private BCryptPasswordEncoder encoder;
 	private UserRepository userRepo;
 	private AdminRepository adminRepo;
+	private KreditnaKarticaRepo kkRepo;
 
 	@Autowired
-	public Controller(BCryptPasswordEncoder encoder, UserRepository userRepo, AdminRepository adminRepo) {
+	public Controller(BCryptPasswordEncoder encoder, UserRepository userRepo, AdminRepository adminRepo, KreditnaKarticaRepo kkRepo) {
 		this.encoder = encoder;
 		this.userRepo = userRepo;
 		this.adminRepo = adminRepo;
+		this.kkRepo = kkRepo;
 		Admin a = new Admin("root", encoder.encode("123"));
 
 		adminRepo.saveAndFlush(a);
@@ -56,8 +60,8 @@ public class Controller {
 
 			// cuvamo u nasoj bazi ovaj entitet
 			userRepo.saveAndFlush(user);
-			
-			//SendEmail.sendEmail(user.getEmail());
+
+			// SendEmail.sendEmail(user.getEmail());
 
 			return new ResponseEntity<>("success", HttpStatus.ACCEPTED);
 		} catch (Exception e) {
@@ -70,16 +74,12 @@ public class Controller {
 	@GetMapping("/isAdmin")
 	public ResponseEntity<Boolean> isAdmin(@RequestHeader(value = HEADER_STRING) String token) {
 		try {
-			System.out.println("provera adminskih prava...");
-			// izvlacimo iz tokena subject koj je postavljen da bude email
 			String username = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
 					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
-			
-			System.out.println(username);
 
 			Admin admin = adminRepo.findByUsername(username);
-			
-			if(admin != null)
+
+			if (admin != null)
 				return new ResponseEntity<>(true, HttpStatus.ACCEPTED);
 			else {
 				return new ResponseEntity<>(false, HttpStatus.FORBIDDEN);
@@ -89,43 +89,77 @@ public class Controller {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
-	
-	
+
 	@PutMapping("/editProfile")
-	public ResponseEntity<String> editProfile(@RequestBody RegistrationForm registrationForm, @RequestHeader(value = HEADER_STRING) String token) {
+	public ResponseEntity<String> editProfile(@RequestBody RegistrationForm registrationForm,
+			@RequestHeader(value = HEADER_STRING) String token) {
 
 		try {
-				
+
 			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
 					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
-			
+
 			User user = userRepo.findByEmail(email);
-			
-			if(registrationForm.getIme() != null && !registrationForm.getIme().trim().equals(user.getIme()))
+
+			if (registrationForm.getIme() != null && !registrationForm.getIme().trim().equals(user.getIme()))
 				user.setIme(registrationForm.getIme());
-			
-			if(registrationForm.getPrezime() != null && !registrationForm.getPrezime().trim().equals(user.getPrezime()))
+
+			if (registrationForm.getPrezime() != null
+					&& !registrationForm.getPrezime().trim().equals(user.getPrezime()))
 				user.setPrezime(registrationForm.getPrezime());
-			
-			if(registrationForm.getEmail() != null && !registrationForm.getEmail().trim().equals(user.getEmail())) {
+
+			if (registrationForm.getEmail() != null && !registrationForm.getEmail().trim().equals(user.getEmail())) {
 				user.setEmail(registrationForm.getEmail());
-				//SendEmail.sendEmail(user.getEmail());
+				// SendEmail.sendEmail(user.getEmail());
 			}
-			
-			if(registrationForm.getBrojPasosa() != null && !registrationForm.getBrojPasosa().trim().equals(user.getBrojPasosa()))
+
+			if (registrationForm.getBrojPasosa() != null
+					&& !registrationForm.getBrojPasosa().trim().equals(user.getBrojPasosa()))
 				user.setBrojPasosa(registrationForm.getBrojPasosa());
-			
-			if(registrationForm.getPassword() != null && !encoder.encode(registrationForm.getPassword()).equals(user.getPassword()))
+
+			if (registrationForm.getPassword() != null
+					&& !encoder.encode(registrationForm.getPassword()).equals(user.getPassword()))
 				user.setPassword(registrationForm.getBrojPasosa());
-			
+
 			userRepo.saveAndFlush(user);
-			
+
 			return new ResponseEntity<>("success", HttpStatus.ACCEPTED);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
+	}
+
+	@PostMapping("/dodajKreditnuKarticu")
+	public ResponseEntity<String> dodajKreditnuKarticu(@RequestBody KKForm kartica,
+			@RequestHeader(value = "Authorization") String token) {
+		try {
+
+			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
+					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
+
+			User user = userRepo.findByEmail(email);
+
+			KreditnaKartica kk = new KreditnaKartica(kartica.getIme(), kartica.getPrezime(), kartica.getBrKartice(),
+					kartica.getSigurnosniBrojKartice());
+			
+			if(kk.getSigurnosniBrojKartice().length() != 3) {
+				return new ResponseEntity<>("Sigurnosni broj mora imati 3 broja!", HttpStatus.BAD_REQUEST);
+			}
+			
+			if(user != null) {
+				user.getKreditneKartice().add(kk);
+			}
+			
+			kk.setUser(user);
+			
+			kkRepo.saveAndFlush(kk);
+
+			return new ResponseEntity<>("Uspesno dodata kartica", HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 	}
 
 }

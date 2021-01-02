@@ -1,7 +1,10 @@
 package app.forms;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import app.entity.Avion;
 
+@JsonIgnoreProperties
 public class PretragaLetaForm {
 
 	
@@ -9,7 +12,7 @@ public class PretragaLetaForm {
 	private String pocetnaDestinacija;
 	private String krajnjaDestinacija;
 	private String duzinaLeta;
-	private int cena;
+	private int cena = 0;
 
 	public Avion getAvion() {
 		return avion;

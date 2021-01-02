@@ -13,7 +13,11 @@ public class UtilsMethods {
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		
+		System.out.println(headers);
+		
 		headers.add("Authorization", token);
+		
+		System.out.println(headers);
 
 		HttpEntity<Object> entity = new HttpEntity<Object>(null, headers);
 
