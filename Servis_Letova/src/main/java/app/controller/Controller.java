@@ -145,7 +145,7 @@ public class Controller {
 
 	
 	@DeleteMapping("/obrisiLet")
-	public ResponseEntity<String> obrisiLet(@RequestBody PretragaLetaForm pretraga,
+	public ResponseEntity<String> obrisiLet(@RequestBody LetForm pretraga,
 			@RequestHeader(value = "Authorization") String token) {
 		try {
 			ResponseEntity<Boolean> response = UtilsMethods.sendGet("http://localhost:8080/isAdmin", token);
@@ -156,8 +156,10 @@ public class Controller {
 
 			List<Let> searched = letRepo.findAll();
 			
+			Avion avion = avionRepo.findByNaziv(pretraga.getAvion());
+			
 			if (pretraga.getAvion() != null) {
-				List<Let> letovi = letRepo.findByAvion(pretraga.getAvion());
+				List<Let> letovi = letRepo.findByAvion(avion);
 				for(int i = 0; i < searched.size(); i++) {
 					if(!letovi.contains(searched.get(i))) {
 						searched.remove(i);
