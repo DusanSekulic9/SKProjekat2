@@ -26,6 +26,7 @@ public class Let {
 	private int cena;
 	private boolean kupiLet=true;
 
+	
 	public Let() {
 
 	}
