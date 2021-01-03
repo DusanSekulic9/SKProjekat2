@@ -9,8 +9,8 @@ public class LetForm {
 	private String avion;
 	private String pocetnaDestinacija;
 	private String krajnjaDestinacija;
-	private String duzinaLeta;
-	private int cena;
+	private int duzinaLeta = 0;
+	private int cena = 0;
 
 	public String getAvion() {
 		return avion;
@@ -36,11 +36,11 @@ public class LetForm {
 		this.krajnjaDestinacija = krajnjaDestinacija;
 	}
 
-	public String getDuzinaLeta() {
+	public int getDuzinaLeta() {
 		return duzinaLeta;
 	}
 
-	public void setDuzinaLeta(String duzinaLeta) {
+	public void setDuzinaLeta(int duzinaLeta) {
 		this.duzinaLeta = duzinaLeta;
 	}
 

@@ -39,7 +39,8 @@ public class Controller {
 	private KreditnaKarticaRepo kkRepo;
 
 	@Autowired
-	public Controller(BCryptPasswordEncoder encoder, UserRepository userRepo, AdminRepository adminRepo, KreditnaKarticaRepo kkRepo) {
+	public Controller(BCryptPasswordEncoder encoder, UserRepository userRepo, AdminRepository adminRepo,
+			KreditnaKarticaRepo kkRepo) {
 		this.encoder = encoder;
 		this.userRepo = userRepo;
 		this.adminRepo = adminRepo;
@@ -89,8 +90,7 @@ public class Controller {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
-	
-	
+
 	@GetMapping("/whoAmI")
 	public ResponseEntity<String> whoAmI(@RequestHeader(value = HEADER_STRING) String token) {
 		try {
@@ -99,7 +99,13 @@ public class Controller {
 
 			User user = userRepo.findByEmail(email);
 
-			return new ResponseEntity<String>(user.getTip(), HttpStatus.ACCEPTED);
+			if (user.getKreditneKartice() != null && user.getKreditneKartice().isEmpty()) {
+				// dodajKreditnuKarticu
+			}
+
+			// izaberi karticu
+
+			return new ResponseEntity<String>("" + user.getId(), HttpStatus.ACCEPTED);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
@@ -159,20 +165,38 @@ public class Controller {
 
 			KreditnaKartica kk = new KreditnaKartica(kartica.getIme(), kartica.getPrezime(), kartica.getBrKartice(),
 					kartica.getSigurnosniBrojKartice());
-			
-			if(kk.getSigurnosniBrojKartice().length() != 3) {
+
+			if (kk.getSigurnosniBrojKartice().length() != 3) {
 				return new ResponseEntity<>("Sigurnosni broj mora imati 3 broja!", HttpStatus.BAD_REQUEST);
 			}
-			
-			if(user != null) {
+
+			if (user != null) {
 				user.getKreditneKartice().add(kk);
 			}
-			
+
 			kk.setUser(user);
-			
+
 			kkRepo.saveAndFlush(kk);
 
 			return new ResponseEntity<>("Uspesno dodata kartica", HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@PostMapping("/updateUser")
+	public ResponseEntity<String> updateUser(@RequestHeader(value = HEADER_STRING) String token,
+			@RequestBody Integer duzinaLeta) {
+		try {
+
+			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
+					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
+
+			User user = userRepo.findByEmail(email);
+
+			user.setPredjeneMilje(user.getPredjeneMilje() + duzinaLeta);
+
+			return new ResponseEntity<>("Uspesno dodate milje", HttpStatus.ACCEPTED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}

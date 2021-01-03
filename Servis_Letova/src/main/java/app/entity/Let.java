@@ -22,7 +22,7 @@ public class Let {
 	private Avion avion;
 	private String pocetnaDestinacija;
 	private String krajnjaDestinacija;
-	private String duzinaLeta;
+	private int duzinaLeta;
 	private int cena;
 	private boolean kupiLet=true;
 	private int kupljeneKarte = 0;
@@ -32,13 +32,23 @@ public class Let {
 
 	}
 
-	public Let(Avion avion, String pocetnaDestinacija, String krajnjaDestinacija, String duzinaLeta, int cena) {
+	public Let(Avion avion, String pocetnaDestinacija, String krajnjaDestinacija, int duzinaLeta, int cena) {
 		super();
 		this.avion = avion;
 		this.pocetnaDestinacija = pocetnaDestinacija;
 		this.krajnjaDestinacija = krajnjaDestinacija;
 		this.duzinaLeta = duzinaLeta;
 		this.cena = cena;
+	}
+
+	
+	
+	public long getIdLet() {
+		return idLet;
+	}
+
+	public void setIdLet(long idLet) {
+		this.idLet = idLet;
 	}
 
 	public Avion getAvion() {
@@ -65,11 +75,11 @@ public class Let {
 		this.krajnjaDestinacija = krajnjaDestinacija;
 	}
 
-	public String getDuzinaLeta() {
+	public int getDuzinaLeta() {
 		return duzinaLeta;
 	}
 
-	public void setDuzinaLeta(String duzinaLeta) {
+	public void setDuzinaLeta(int duzinaLeta) {
 		this.duzinaLeta = duzinaLeta;
 	}
 

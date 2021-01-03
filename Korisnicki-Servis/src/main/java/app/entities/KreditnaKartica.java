@@ -31,6 +31,11 @@ public class KreditnaKartica {
 		
 	}
 	
+	@Override
+	public String toString() {
+		return brKartice;
+	}
+	
 	
 	public KreditnaKartica(String ime, String prezime, String brKartice, String sigurnosniBrojKartice) {
 		this.ime = ime;

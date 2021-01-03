@@ -17,7 +17,7 @@ public interface LetRepository extends JpaRepository<Let, Long> {
 
 	List<Let> findByKrajnjaDestinacija(String krajnjaDestinacija);
 
-	List<Let> findByDuzinaLeta(String duzinaLeta);
+	List<Let> findByDuzinaLeta(int duzinaLeta);
 
 	List<Let> findByCena(int cena);
 

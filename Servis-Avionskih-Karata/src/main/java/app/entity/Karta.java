@@ -22,6 +22,12 @@ public class Karta {
 		return idKarta;
 	}
 
+	public Karta(Date date, long idLet, long idUser) {
+		this.date = date;
+		this.idLet = idLet;
+		this.idUser = idUser;
+	}
+
 	public void setIdKarta(long idKarta) {
 		this.idKarta = idKarta;
 	}
