@@ -1,6 +1,8 @@
 package app.security;
 
-import static app.security.SecurityConstants.*;
+import static app.security.SecurityConstants.HEADER_STRING;
+import static app.security.SecurityConstants.SECRET;
+import static app.security.SecurityConstants.TOKEN_PREFIX;
 
 import java.io.IOException;
 import java.util.ArrayList;

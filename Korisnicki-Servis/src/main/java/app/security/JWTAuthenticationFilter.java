@@ -1,5 +1,9 @@
 package app.security;
 
+import static app.security.SecurityConstants.HEADER_STRING;
+import static app.security.SecurityConstants.SECRET;
+import static app.security.SecurityConstants.TOKEN_EXPIRATION_TIME;
+import static app.security.SecurityConstants.TOKEN_PREFIX;
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
 import java.io.BufferedInputStream;
@@ -8,7 +12,6 @@ import java.util.Collections;
 import java.util.Date;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,8 +26,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import app.forms.AdminLoginForm;
 import app.forms.Login_Form;
-
-import static app.security.SecurityConstants.*;
 
 /**
  * Sluzi da da JSON Web Token user-u koji pokusava da pristupi (user salje

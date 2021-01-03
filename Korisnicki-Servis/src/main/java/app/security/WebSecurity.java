@@ -1,5 +1,11 @@
 package app.security;
 
+import static app.security.SecurityConstants.ADMIN_LOGIN_PATH;
+import static app.security.SecurityConstants.LOGIN_PATH;
+import static app.security.SecurityConstants.REGISTRATION_PATH;
+
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,10 +20,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import app.repository.AdminRepository;
 import app.repository.UserRepository;
-
-import static app.security.SecurityConstants.*;
-
-import java.util.Arrays;
 
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {

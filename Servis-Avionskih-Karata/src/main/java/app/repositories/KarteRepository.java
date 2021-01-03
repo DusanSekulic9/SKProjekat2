@@ -10,5 +10,5 @@ import app.entity.Karta;
 @Repository
 public interface KarteRepository extends JpaRepository<Karta, Long>{
 	
-	List<Karta> findallByIdUser(long userId);
+	List<Karta> findAllByIdUser(long userId);
 }

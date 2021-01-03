@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
-import app.email.SendEmail;
 import app.entities.Admin;
 import app.entities.KreditnaKartica;
 import app.entities.User;
