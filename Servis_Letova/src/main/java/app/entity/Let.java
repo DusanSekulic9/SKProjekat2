@@ -25,6 +25,7 @@ public class Let {
 	private String duzinaLeta;
 	private int cena;
 	private boolean kupiLet=true;
+	private int kupljeneKarte = 0;
 
 	
 	public Let() {
@@ -86,6 +87,14 @@ public class Let {
 
 	public void setKupiLet(boolean kupiLet) {
 		this.kupiLet = kupiLet;
+	}
+
+	public int getKupljeneKarte() {
+		return kupljeneKarte;
+	}
+
+	public void setKupljeneKarte(int kupljeneKarte) {
+		this.kupljeneKarte = kupljeneKarte;
 	}
 	
 	

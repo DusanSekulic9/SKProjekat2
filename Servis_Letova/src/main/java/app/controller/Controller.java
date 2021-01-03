@@ -42,24 +42,21 @@ public class Controller {
 		this.letRepo = letRepo;
 		this.avionRepo = avionRepo;
 	}
-	
+
 	@Autowired
 	JmsTemplate jmsTemplate;
 	@Autowired
 	Queue emailQueue;
-	
-	
-	
 
 	@GetMapping("/pretraga")
 	public ResponseEntity<String> pretraziLetove(@RequestBody PretragaLetaForm pretraga) {
 		try {
 			List<Let> searched = letRepo.findAll();
-			
+
 			if (pretraga.getAvion() != null) {
 				List<Let> letovi = letRepo.findByAvion(pretraga.getAvion());
-				for(int i = 0; i < searched.size(); i++) {
-					if(!letovi.contains(searched.get(i))) {
+				for (int i = 0; i < searched.size(); i++) {
+					if (!letovi.contains(searched.get(i))) {
 						searched.remove(i);
 						i--;
 					}
@@ -67,8 +64,8 @@ public class Controller {
 			}
 			if (pretraga.getPocetnaDestinacija() != null) {
 				List<Let> letovi = letRepo.findByPocetnaDestinacija(pretraga.getPocetnaDestinacija());
-				for(int i = 0; i < searched.size(); i++) {
-					if(!letovi.contains(searched.get(i))) {
+				for (int i = 0; i < searched.size(); i++) {
+					if (!letovi.contains(searched.get(i))) {
 						searched.remove(i);
 						i--;
 					}
@@ -76,8 +73,8 @@ public class Controller {
 			}
 			if (pretraga.getKrajnjaDestinacija() != null) {
 				List<Let> letovi = letRepo.findByKrajnjaDestinacija(pretraga.getKrajnjaDestinacija());
-				for(int i = 0; i < searched.size(); i++) {
-					if(!letovi.contains(searched.get(i))) {
+				for (int i = 0; i < searched.size(); i++) {
+					if (!letovi.contains(searched.get(i))) {
 						searched.remove(i);
 						i--;
 					}
@@ -85,8 +82,8 @@ public class Controller {
 			}
 			if (pretraga.getDuzinaLeta() != null) {
 				List<Let> letovi = letRepo.findByDuzinaLeta(pretraga.getDuzinaLeta());
-				for(int i = 0; i < searched.size(); i++) {
-					if(!letovi.contains(searched.get(i))) {
+				for (int i = 0; i < searched.size(); i++) {
+					if (!letovi.contains(searched.get(i))) {
 						searched.remove(i);
 						i--;
 					}
@@ -94,22 +91,21 @@ public class Controller {
 			}
 			if (pretraga.getCena() != 0) {
 				List<Let> letovi = letRepo.findByCena(pretraga.getCena());
-				for(int i = 0; i < searched.size(); i++) {
-					if(!letovi.contains(searched.get(i))) {
+				for (int i = 0; i < searched.size(); i++) {
+					if (!letovi.contains(searched.get(i))) {
 						searched.remove(i);
 						i--;
 					}
 				}
 			}
-			
-			if(searched.isEmpty()) {
-				return new ResponseEntity<String>("Nema aviona za trazenu pretragu",HttpStatus.BAD_REQUEST);
+
+			if (searched.isEmpty()) {
+				return new ResponseEntity<String>("Nema aviona za trazenu pretragu", HttpStatus.BAD_REQUEST);
 			}
-			
-			//prikazi na gui searched
-			for(Let l : searched)
+
+			// prikazi na gui searched
+			for (Let l : searched)
 				System.out.println(l.getPocetnaDestinacija());
-			
 
 			return new ResponseEntity<String>("Avioni pronadjeni", HttpStatus.ACCEPTED);
 		} catch (Exception e) {
@@ -143,7 +139,6 @@ public class Controller {
 
 	}
 
-	
 	@DeleteMapping("/obrisiLet")
 	public ResponseEntity<String> obrisiLet(@RequestBody LetForm pretraga,
 			@RequestHeader(value = "Authorization") String token) {
@@ -155,13 +150,13 @@ public class Controller {
 			}
 
 			List<Let> searched = letRepo.findAll();
-			
+
 			Avion avion = avionRepo.findByNaziv(pretraga.getAvion());
-			
+
 			if (pretraga.getAvion() != null) {
 				List<Let> letovi = letRepo.findByAvion(avion);
-				for(int i = 0; i < searched.size(); i++) {
-					if(!letovi.contains(searched.get(i))) {
+				for (int i = 0; i < searched.size(); i++) {
+					if (!letovi.contains(searched.get(i))) {
 						searched.remove(i);
 						i--;
 					}
@@ -169,8 +164,8 @@ public class Controller {
 			}
 			if (pretraga.getPocetnaDestinacija() != null) {
 				List<Let> letovi = letRepo.findByPocetnaDestinacija(pretraga.getPocetnaDestinacija());
-				for(int i = 0; i < searched.size(); i++) {
-					if(!letovi.contains(searched.get(i))) {
+				for (int i = 0; i < searched.size(); i++) {
+					if (!letovi.contains(searched.get(i))) {
 						searched.remove(i);
 						i--;
 					}
@@ -178,8 +173,8 @@ public class Controller {
 			}
 			if (pretraga.getKrajnjaDestinacija() != null) {
 				List<Let> letovi = letRepo.findByKrajnjaDestinacija(pretraga.getKrajnjaDestinacija());
-				for(int i = 0; i < searched.size(); i++) {
-					if(!letovi.contains(searched.get(i))) {
+				for (int i = 0; i < searched.size(); i++) {
+					if (!letovi.contains(searched.get(i))) {
 						searched.remove(i);
 						i--;
 					}
@@ -187,8 +182,8 @@ public class Controller {
 			}
 			if (pretraga.getDuzinaLeta() != null) {
 				List<Let> letovi = letRepo.findByDuzinaLeta(pretraga.getDuzinaLeta());
-				for(int i = 0; i < searched.size(); i++) {
-					if(!letovi.contains(searched.get(i))) {
+				for (int i = 0; i < searched.size(); i++) {
+					if (!letovi.contains(searched.get(i))) {
 						searched.remove(i);
 						i--;
 					}
@@ -196,27 +191,25 @@ public class Controller {
 			}
 			if (pretraga.getCena() != 0) {
 				List<Let> letovi = letRepo.findByCena(pretraga.getCena());
-				for(int i = 0; i < searched.size(); i++) {
-					if(!letovi.contains(searched.get(i))) {
+				for (int i = 0; i < searched.size(); i++) {
+					if (!letovi.contains(searched.get(i))) {
 						searched.remove(i);
 						i--;
 					}
 				}
 			}
-			
-			
+
 			Let brisi = searched.get(0);
 
-			if(brisi.isKupiLet())
-				jmsTemplate.convertAndSend(emailQueue, "Povracaj novca");	
+			if (brisi.isKupiLet())
+				jmsTemplate.convertAndSend(emailQueue, "Povracaj novca");
 			letRepo.delete(brisi);
 			return new ResponseEntity<String>("Let je obrisan!", HttpStatus.ACCEPTED);
 		} catch (Exception e) {
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
 	}
-	
-	
+
 	@PostMapping("/dodajAvion")
 	public ResponseEntity<String> dodajAvion(@RequestBody AvionForm avion,
 			@RequestHeader(value = "Authorization") String token) {
@@ -261,8 +254,69 @@ public class Controller {
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
 	}
-	
-	
-	
+
+	@GetMapping("/kapacitet")
+	public ResponseEntity<String> kapacitet(@RequestBody LetForm let) {
+		try {
+			Avion avion = avionRepo.findByNaziv(let.getAvion());
+
+			List<Let> searched = letRepo.findAll();
+
+			if (let.getAvion() != null) {
+				List<Let> letovi = letRepo.findByAvion(avion);
+				for (int i = 0; i < searched.size(); i++) {
+					if (!letovi.contains(searched.get(i))) {
+						searched.remove(i);
+						i--;
+					}
+				}
+			}
+			if (let.getPocetnaDestinacija() != null) {
+				List<Let> letovi = letRepo.findByPocetnaDestinacija(let.getPocetnaDestinacija());
+				for (int i = 0; i < searched.size(); i++) {
+					if (!letovi.contains(searched.get(i))) {
+						searched.remove(i);
+						i--;
+					}
+				}
+			}
+			if (let.getKrajnjaDestinacija() != null) {
+				List<Let> letovi = letRepo.findByKrajnjaDestinacija(let.getKrajnjaDestinacija());
+				for (int i = 0; i < searched.size(); i++) {
+					if (!letovi.contains(searched.get(i))) {
+						searched.remove(i);
+						i--;
+					}
+				}
+			}
+			if (let.getDuzinaLeta() != null) {
+				List<Let> letovi = letRepo.findByDuzinaLeta(let.getDuzinaLeta());
+				for (int i = 0; i < searched.size(); i++) {
+					if (!letovi.contains(searched.get(i))) {
+						searched.remove(i);
+						i--;
+					}
+				}
+			}
+			if (let.getCena() != 0) {
+				List<Let> letovi = letRepo.findByCena(let.getCena());
+				for (int i = 0; i < searched.size(); i++) {
+					if (!letovi.contains(searched.get(i))) {
+						searched.remove(i);
+						i--;
+					}
+				}
+			}
+
+			if (searched.get(0).getAvion().getKapacitetPutnika() > searched.get(0).getKupljeneKarte()) {
+				return new ResponseEntity<String>("Ima mesta", HttpStatus.ACCEPTED);
+			}
+
+			return new ResponseEntity<String>("Greska, kapacitet je popunjen", HttpStatus.BANDWIDTH_LIMIT_EXCEEDED);
+		} catch (Exception e) {
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+		}
+
+	}
 
 }

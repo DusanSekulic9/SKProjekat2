@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import app.forms.LetForm;
 import app.repositories.KarteRepository;
+import app.utils.UtilsMethods;
 
 @RestController
 @RequestMapping("")
@@ -27,6 +28,14 @@ public class Controller {
 	public ResponseEntity<String> kupiKartu(@RequestBody LetForm let,
 			@RequestHeader(value = "Authorization") String token) {
 		try {
+			ResponseEntity<String> imaLiMesta = UtilsMethods.sendGet("http://localhost:8081/kapacitet", let);
+			if(!imaLiMesta.getStatusCode().equals(HttpStatus.ACCEPTED)) {
+				return imaLiMesta;
+			}
+			ResponseEntity<String> user = UtilsMethods.sendGet("http://localhost:8080/whoAmI", token);
+			if(!user.getStatusCode().equals(HttpStatus.ACCEPTED)) {
+				return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+			}
 			
 			
 

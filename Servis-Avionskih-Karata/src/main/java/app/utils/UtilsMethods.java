@@ -8,20 +8,28 @@ import org.springframework.web.client.RestTemplate;
 
 public class UtilsMethods {
 
-	public static ResponseEntity<Boolean> sendGet(String url, String token) {
+	public static ResponseEntity<String> sendGet(String url, String token) {
 
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
-		
-		System.out.println(headers);
-		
+
 		headers.add("Authorization", token);
-		
-		System.out.println(headers);
 
-		HttpEntity<Object> entity = new HttpEntity<Object>(null, headers);
+		HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 
-		ResponseEntity<Boolean> response = restTemplate.exchange(url, HttpMethod.GET, entity, Boolean.class);
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+
+		return response;
+	}
+
+	public static ResponseEntity<String> sendGet(String url, Object body) {
+
+		RestTemplate restTemplate = new RestTemplate();
+		HttpHeaders headers = new HttpHeaders();
+
+		HttpEntity<Object> entity = new HttpEntity<Object>(body, headers);
+
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
 		return response;
 	}

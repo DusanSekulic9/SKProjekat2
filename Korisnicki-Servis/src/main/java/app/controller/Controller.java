@@ -89,6 +89,22 @@ public class Controller {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	
+	@GetMapping("/whoAmI")
+	public ResponseEntity<String> whoAmI(@RequestHeader(value = HEADER_STRING) String token) {
+		try {
+			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
+					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
+
+			User user = userRepo.findByEmail(email);
+
+			return new ResponseEntity<String>(user.getTip(), HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+		}
+	}
 
 	@PutMapping("/editProfile")
 	public ResponseEntity<String> editProfile(@RequestBody RegistrationForm registrationForm,
