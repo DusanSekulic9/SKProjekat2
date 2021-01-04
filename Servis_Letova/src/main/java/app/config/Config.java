@@ -21,6 +21,11 @@ public class Config {
 		return new ActiveMQQueue("email.queue");
 	}
 	
+	@Bean
+	public Queue karteQueue() {
+		return new ActiveMQQueue("karte.queue");
+	}
+	
 	
 	
 	@Bean

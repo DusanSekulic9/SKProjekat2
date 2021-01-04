@@ -47,6 +47,8 @@ public class Controller {
 	JmsTemplate jmsTemplate;
 	@Autowired
 	Queue emailQueue;
+	@Autowired
+	Queue karteQueue;
 
 	@GetMapping("/pretraga")
 	public ResponseEntity<String> pretraziLetove(@RequestBody PretragaLetaForm pretraga) {
@@ -200,9 +202,26 @@ public class Controller {
 			}
 
 			Let brisi = searched.get(0);
+			
+			
 
-			if (brisi.isKupiLet())
-				jmsTemplate.convertAndSend(emailQueue, "Povracaj novca");
+			
+			
+			if (brisi.isKupiLet()) {
+				ResponseEntity<String> ids = UtilsMethods.sendGet("http://localhost:8082/otkaziLet", brisi.getIdLet());
+				String[] split = ids.getBody().split(" ");
+				List<Long> idUser = new ArrayList<Long>();
+				for(String s : split)
+					idUser.add(Long.parseLong(s));
+				
+				
+				jmsTemplate.convertAndSend(karteQueue, brisi.getIdLet());	
+				jmsTemplate.convertAndSend(emailQueue, idUser);
+			}
+			
+			
+			
+			
 			letRepo.delete(brisi);
 			return new ResponseEntity<String>("Let je obrisan!", HttpStatus.ACCEPTED);
 		} catch (Exception e) {
@@ -373,6 +392,7 @@ public class Controller {
 			}
 
 			searched.get(0).setKupljeneKarte(searched.get(0).getKupljeneKarte() + 1);
+			searched.get(0).setKupiLet(true);
 
 			return new ResponseEntity<String>(HttpStatus.ACCEPTED);
 		} catch (Exception e) {

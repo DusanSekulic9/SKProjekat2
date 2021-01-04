@@ -21,6 +21,9 @@ management:
   web:
    exposure:
     include: "*"
+    
+ribbon:
+ ReadTimeout: 60000
 
 
 # Hardcode service    

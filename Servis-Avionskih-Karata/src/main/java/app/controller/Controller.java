@@ -1,10 +1,13 @@
 package app.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -55,6 +58,21 @@ public class Controller {
 			
 
 			return new ResponseEntity<String>("Uspesno kupljena karta", HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	
+	@GetMapping("/otkazanLet")
+	public ResponseEntity<String> otkazanLet(@RequestBody Long let) {
+		try {
+			List<Karta> karte = karteRepo.findAllByIdLet(let);
+			String str="";
+			for(Karta k : karte) {
+				str += "" + k.getIdUser()+" ";
+			}
+			return new ResponseEntity<String>(str, HttpStatus.ACCEPTED);
 		} catch (Exception e) {
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}

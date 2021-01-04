@@ -17,6 +17,7 @@ public class Karta {
 	private Date date;
 	private long idLet;
 	private long idUser;
+	private boolean canceled=false;
 
 	public long getIdKarta() {
 		return idKarta;
@@ -55,5 +56,15 @@ public class Karta {
 	public void setIdUser(long idUser) {
 		this.idUser = idUser;
 	}
+
+	public boolean isCanceled() {
+		return canceled;
+	}
+
+	public void setCanceled(boolean canceled) {
+		this.canceled = canceled;
+	}
+	
+	
 
 }

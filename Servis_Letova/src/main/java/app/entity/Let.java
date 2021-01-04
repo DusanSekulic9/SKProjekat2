@@ -24,7 +24,7 @@ public class Let {
 	private String krajnjaDestinacija;
 	private int duzinaLeta;
 	private int cena;
-	private boolean kupiLet=true;
+	private boolean kupiLet=false;
 	private int kupljeneKarte = 0;
 
 	

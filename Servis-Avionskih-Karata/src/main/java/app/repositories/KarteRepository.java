@@ -11,4 +11,6 @@ import app.entity.Karta;
 public interface KarteRepository extends JpaRepository<Karta, Long>{
 	
 	List<Karta> findAllByIdUser(long userId);
+	
+	List<Karta> findAllByIdLet(long letId);
 }

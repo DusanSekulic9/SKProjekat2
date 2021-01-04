@@ -1,5 +1,8 @@
 package app.utils;
 
+
+import java.util.List;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -37,5 +40,18 @@ public class UtilsMethods {
 
 		return response;
 	}
+	
+	public static ResponseEntity<String> sendGet(String url, Long id) {
+
+		RestTemplate restTemplate = new RestTemplate();
+		HttpHeaders headers = new HttpHeaders();
+		HttpEntity<Object> entity = new HttpEntity<Object>(id, headers);
+
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+
+		return response;
+	}
+	
+	
 
 }
