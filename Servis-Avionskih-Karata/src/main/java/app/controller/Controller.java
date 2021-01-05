@@ -57,7 +57,7 @@ public class Controller {
 			
 			Karta karta = new Karta(new Date(), idLet, userId);
 			
-			karteRepo.saveAndFlush(karta);
+			karteRepo.save(karta);
 			
 
 			return new ResponseEntity<String>("Uspesno kupljena karta", HttpStatus.ACCEPTED);
@@ -67,14 +67,19 @@ public class Controller {
 	}
 	
 	
-	@GetMapping("/otkazanLet")
+	@PostMapping("/otkazanLet")
 	public ResponseEntity<String> otkazanLet(@RequestBody Long let) {
 		try {
+			System.out.println(let);
+			System.out.println("trazenje karata");
 			List<Karta> karte = karteRepo.findAllByIdLet(let);
+			System.out.println("karte nadjene");
 			String str="";
 			for(Karta k : karte) {
 				str += "" + k.getIdUser()+" ";
+				System.out.println("Dodato");
 			}
+			System.out.println("proslo");
 			return new ResponseEntity<String>(str, HttpStatus.ACCEPTED);
 		} catch (Exception e) {
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);

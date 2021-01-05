@@ -146,10 +146,14 @@ public class Controller {
 			@RequestHeader(value = "Authorization") String token) {
 		try {
 			ResponseEntity<Boolean> response = UtilsMethods.sendGet("http://localhost:8080/isAdmin", token);
-
+			
+			System.out.println("Provera admina");
+			
 			if (!response.getBody().booleanValue()) {
 				return new ResponseEntity<String>(HttpStatus.FORBIDDEN);
 			}
+			
+			System.out.println("Proverio admina");
 
 			List<Let> searched = letRepo.findAll();
 
@@ -204,7 +208,11 @@ public class Controller {
 			Let brisi = searched.get(0);
 
 			if (brisi.isKupiLet()) {
-				ResponseEntity<String> ids = UtilsMethods.sendGet("http://localhost:8082/otkaziLet", brisi.getIdLet());
+				System.out.println("Pokusaj otkazivanja");
+				ResponseEntity<String> ids = UtilsMethods.sendPost2("http://localhost:8082/otkazanLet", brisi.getIdLet());
+				
+				System.out.println("Otkazan let");
+				
 				String[] split = ids.getBody().split(" ");
 				List<Long> idUser = new ArrayList<Long>();
 				for (String s : split)
@@ -220,6 +228,9 @@ public class Controller {
 			}
 
 			letRepo.delete(brisi);
+			
+			System.out.println("Let obrisan");
+			
 			return new ResponseEntity<String>("Let je obrisan!", HttpStatus.ACCEPTED);
 		} catch (Exception e) {
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);

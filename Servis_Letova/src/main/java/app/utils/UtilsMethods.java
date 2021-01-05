@@ -41,6 +41,18 @@ public class UtilsMethods {
 		return response;
 	}
 	
+	public static ResponseEntity<String> sendPost2(String url, Object body) {
+
+		RestTemplate restTemplate = new RestTemplate();
+		HttpHeaders headers = new HttpHeaders();
+
+		HttpEntity<Object> entity = new HttpEntity<Object>(body, headers);
+
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+
+		return response;
+	}
+	
 	public static ResponseEntity<String> sendGet(String url, Long id) {
 
 		RestTemplate restTemplate = new RestTemplate();

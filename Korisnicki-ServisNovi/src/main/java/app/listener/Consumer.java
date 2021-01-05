@@ -25,6 +25,7 @@ public class Consumer {
 			User u = userRepo.findById(l).get();
 			SendEmail.sendEmail(u.getEmail());
 			u.setPredjeneMilje(u.getPredjeneMilje() - duzina);
+			userRepo.saveAndFlush(u);
 		}
 		
 	}
