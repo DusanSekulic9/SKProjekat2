@@ -8,8 +8,8 @@ public class LetForm {
 	private String avion;
 	private String pocetnaDestinacija;
 	private String krajnjaDestinacija;
-	private int duzinaLeta;
-	private int cena;
+	private int duzinaLeta = 0;
+	private int cena = 0;
 
 	public String getAvion() {
 		return avion;

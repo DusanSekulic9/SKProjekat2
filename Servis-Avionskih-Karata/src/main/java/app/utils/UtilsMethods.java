@@ -6,6 +6,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import app.forms.LetForm;
+
 public class UtilsMethods {
 
 	public static ResponseEntity<String> sendGet(String url, String token) {
@@ -40,10 +42,11 @@ public class UtilsMethods {
 
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
+		
 
 		HttpEntity<Object> entity = new HttpEntity<Object>(body, headers);
 
-		ResponseEntity<Long> response = restTemplate.exchange(url, HttpMethod.GET, entity, Long.class);
+		ResponseEntity<Long> response = restTemplate.exchange(url, HttpMethod.POST, entity, Long.class);
 
 		return response;
 	}

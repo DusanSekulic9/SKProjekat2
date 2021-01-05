@@ -129,10 +129,12 @@ public class User {
 
 
 	public void setPredjeneMilje(int predjeneMilje) {
-		if(this.predjeneMilje <= 10000 && predjeneMilje > 10000) {
+		if(predjeneMilje > 10000) {
 			setTip(Rank_Constants.ZLATO);
-		}else if(this.predjeneMilje <= 1000 && predjeneMilje > 1000) {
+		}else if(predjeneMilje > 1000) {
 			setTip(Rank_Constants.SREBRO);
+		}else {
+			setTip(Rank_Constants.BRONZA);
 		}
 		this.predjeneMilje = predjeneMilje;
 	}

@@ -202,26 +202,23 @@ public class Controller {
 			}
 
 			Let brisi = searched.get(0);
-			
-			
 
-			
-			
 			if (brisi.isKupiLet()) {
 				ResponseEntity<String> ids = UtilsMethods.sendGet("http://localhost:8082/otkaziLet", brisi.getIdLet());
 				String[] split = ids.getBody().split(" ");
 				List<Long> idUser = new ArrayList<Long>();
-				for(String s : split)
+				for (String s : split)
 					idUser.add(Long.parseLong(s));
+
+				List<Object> zaSlanje = new ArrayList<Object>();
 				
+				zaSlanje.add(idUser);
+				zaSlanje.add(brisi.getDuzinaLeta());
 				
-				jmsTemplate.convertAndSend(karteQueue, brisi.getIdLet());	
+				jmsTemplate.convertAndSend(karteQueue, zaSlanje);
 				jmsTemplate.convertAndSend(emailQueue, idUser);
 			}
-			
-			
-			
-			
+
 			letRepo.delete(brisi);
 			return new ResponseEntity<String>("Let je obrisan!", HttpStatus.ACCEPTED);
 		} catch (Exception e) {
@@ -274,11 +271,11 @@ public class Controller {
 		}
 	}
 
-	@GetMapping("/kapacitet")
+	@PostMapping("/kapacitet")
 	public ResponseEntity<Long> kapacitet(@RequestBody LetForm let) {
 		try {
 			Avion avion = avionRepo.findByNaziv(let.getAvion());
-
+			System.out.println("nasao avion");
 			List<Let> searched = letRepo.findAll();
 
 			if (let.getAvion() != null) {
@@ -337,7 +334,7 @@ public class Controller {
 		}
 
 	}
-	
+
 	@PostMapping("/updateLet")
 	public ResponseEntity<String> updateLet(@RequestBody LetForm let) {
 		try {
@@ -393,6 +390,8 @@ public class Controller {
 
 			searched.get(0).setKupljeneKarte(searched.get(0).getKupljeneKarte() + 1);
 			searched.get(0).setKupiLet(true);
+			
+			letRepo.saveAndFlush(searched.get(0));
 
 			return new ResponseEntity<String>(HttpStatus.ACCEPTED);
 		} catch (Exception e) {

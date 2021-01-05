@@ -46,11 +46,14 @@ public class Controller {
 				return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 			}
 			
+			
 			Long userId = userInfo.getBody();
 			
 			ResponseEntity<String> updateLet = UtilsMethods.sendPost("http://localhost:8081/updateLet", let);
 			
+			
 			ResponseEntity<String> updateUser = UtilsMethods.sendPost("http://localhost:8080/updateUser", token, let.getDuzinaLeta());
+			
 			
 			Karta karta = new Karta(new Date(), idLet, userId);
 			

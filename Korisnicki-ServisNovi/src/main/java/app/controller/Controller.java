@@ -91,7 +91,7 @@ public class Controller {
 	}
 
 	@GetMapping("/whoAmI")
-	public ResponseEntity<String> whoAmI(@RequestHeader(value = HEADER_STRING) String token) {
+	public ResponseEntity<Long> whoAmI(@RequestHeader(value = HEADER_STRING) String token) {
 		try {
 			String email = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build()
 					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
@@ -104,10 +104,10 @@ public class Controller {
 
 			// izaberi karticu
 
-			return new ResponseEntity<String>("" + user.getId(), HttpStatus.ACCEPTED);
+			return new ResponseEntity<Long>(user.getId(), HttpStatus.ACCEPTED);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Long>(HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -194,6 +194,8 @@ public class Controller {
 			User user = userRepo.findByEmail(email);
 
 			user.setPredjeneMilje(user.getPredjeneMilje() + duzinaLeta);
+			
+			userRepo.saveAndFlush(user);
 
 			return new ResponseEntity<>("Uspesno dodate milje", HttpStatus.ACCEPTED);
 		} catch (Exception e) {

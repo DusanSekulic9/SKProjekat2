@@ -18,10 +18,13 @@ public class Consumer {
 	
 	
 	@JmsListener(destination = "email.queue")
-	public void consume(List<Long> list) {
-		for(Long l : list) {
+	public void consume(List<Object> list) {
+		List<Long> ids = (List<Long>) list.get(0);
+		int duzina = (int) list.get(1);
+		for(Long l : ids) {
 			User u = userRepo.findById(l).get();
 			SendEmail.sendEmail(u.getEmail());
+			u.setPredjeneMilje(u.getPredjeneMilje() - duzina);
 		}
 		
 	}
