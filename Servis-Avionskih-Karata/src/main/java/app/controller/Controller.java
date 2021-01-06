@@ -70,7 +70,7 @@ public class Controller {
 	@PostMapping("/otkazanLet")
 	public ResponseEntity<String> otkazanLet(@RequestBody Long let) {
 		try {
-			System.out.println(let);
+			System.out.println(let.getClass());
 			System.out.println("trazenje karata");
 			List<Karta> karte = karteRepo.findAllByIdLet(let);
 			System.out.println("karte nadjene");
