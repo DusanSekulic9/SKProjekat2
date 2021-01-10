@@ -43,7 +43,7 @@ public class Controller {
 			
 			ResponseEntity<Long> userInfo = UtilsMethods.sendGetLong("http://localhost:8080/whoAmI", token);
 			if(!userInfo.getStatusCode().equals(HttpStatus.ACCEPTED)) {
-				return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<String>("Nemate nijednu karticu!",HttpStatus.EXPECTATION_FAILED);
 			}
 			
 			

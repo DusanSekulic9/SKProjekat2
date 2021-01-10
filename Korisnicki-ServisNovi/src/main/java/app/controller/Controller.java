@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
+import app.email.SendEmail;
 import app.entities.Admin;
 import app.entities.KreditnaKartica;
 import app.entities.User;
@@ -61,7 +62,7 @@ public class Controller {
 			// cuvamo u nasoj bazi ovaj entitet
 			userRepo.saveAndFlush(user);
 
-			// SendEmail.sendEmail(user.getEmail());
+			SendEmail.sendEmail(user.getEmail());
 
 			return new ResponseEntity<>("success", HttpStatus.ACCEPTED);
 		} catch (Exception e) {
@@ -99,10 +100,10 @@ public class Controller {
 			User user = userRepo.findByEmail(email);
 
 			if (user.getKreditneKartice() != null && user.getKreditneKartice().isEmpty()) {
-				// dodajKreditnuKarticu
+				return new ResponseEntity<Long>(HttpStatus.EXPECTATION_FAILED);
 			}
 
-			// izaberi karticu
+			// na gui saljem kartice
 
 			return new ResponseEntity<Long>(user.getId(), HttpStatus.ACCEPTED);
 		} catch (Exception e) {

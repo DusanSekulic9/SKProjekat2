@@ -224,7 +224,7 @@ public class Controller {
 				zaSlanje.add(brisi.getDuzinaLeta());
 				
 				jmsTemplate.convertAndSend(karteQueue, zaSlanje);
-				jmsTemplate.convertAndSend(emailQueue, idUser);
+				jmsTemplate.convertAndSend(emailQueue, zaSlanje);
 			}
 
 			letRepo.delete(brisi);
