@@ -62,7 +62,7 @@ public class Controller {
 			// cuvamo u nasoj bazi ovaj entitet
 			userRepo.saveAndFlush(user);
 
-			SendEmail.sendEmail(user.getEmail());
+			// SendEmail.sendEmail(user.getEmail());
 
 			return new ResponseEntity<>("success", HttpStatus.ACCEPTED);
 		} catch (Exception e) {
@@ -123,27 +123,32 @@ public class Controller {
 
 			User user = userRepo.findByEmail(email);
 
-			if (registrationForm.getIme() != null && !registrationForm.getIme().trim().equals(user.getIme()))
-				user.setIme(registrationForm.getIme());
+			synchronized (user) {
 
-			if (registrationForm.getPrezime() != null
-					&& !registrationForm.getPrezime().trim().equals(user.getPrezime()))
-				user.setPrezime(registrationForm.getPrezime());
+				if (registrationForm.getIme() != null && !registrationForm.getIme().trim().equals(user.getIme()))
+					user.setIme(registrationForm.getIme());
 
-			if (registrationForm.getEmail() != null && !registrationForm.getEmail().trim().equals(user.getEmail())) {
-				user.setEmail(registrationForm.getEmail());
-				// SendEmail.sendEmail(user.getEmail());
+				if (registrationForm.getPrezime() != null
+						&& !registrationForm.getPrezime().trim().equals(user.getPrezime()))
+					user.setPrezime(registrationForm.getPrezime());
+
+				if (registrationForm.getEmail() != null
+						&& !registrationForm.getEmail().trim().equals(user.getEmail())) {
+					user.setEmail(registrationForm.getEmail());
+					// SendEmail.sendEmail(user.getEmail());
+				}
+
+				if (registrationForm.getBrojPasosa() != null
+						&& !registrationForm.getBrojPasosa().trim().equals(user.getBrojPasosa()))
+					user.setBrojPasosa(registrationForm.getBrojPasosa());
+
+				if (registrationForm.getPassword() != null
+						&& !encoder.encode(registrationForm.getPassword()).equals(user.getPassword()))
+					user.setPassword(registrationForm.getBrojPasosa());
+
+				userRepo.saveAndFlush(user);
+
 			}
-
-			if (registrationForm.getBrojPasosa() != null
-					&& !registrationForm.getBrojPasosa().trim().equals(user.getBrojPasosa()))
-				user.setBrojPasosa(registrationForm.getBrojPasosa());
-
-			if (registrationForm.getPassword() != null
-					&& !encoder.encode(registrationForm.getPassword()).equals(user.getPassword()))
-				user.setPassword(registrationForm.getBrojPasosa());
-
-			userRepo.saveAndFlush(user);
 
 			return new ResponseEntity<>("success", HttpStatus.ACCEPTED);
 		} catch (Exception e) {
@@ -193,13 +198,16 @@ public class Controller {
 					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
 
 			User user = userRepo.findByEmail(email);
-
-			user.setPredjeneMilje(user.getPredjeneMilje() + duzinaLeta);
 			
-			userRepo.saveAndFlush(user);
+			synchronized (user) {
+				user.setPredjeneMilje(user.getPredjeneMilje() + duzinaLeta);
+				userRepo.saveAndFlush(user);
+			}
+			
 
 			return new ResponseEntity<>("Uspesno dodate milje", HttpStatus.ACCEPTED);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}

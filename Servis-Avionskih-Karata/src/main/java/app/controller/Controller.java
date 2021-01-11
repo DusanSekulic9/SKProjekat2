@@ -62,6 +62,7 @@ public class Controller {
 
 			return new ResponseEntity<String>("Uspesno kupljena karta", HttpStatus.ACCEPTED);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -82,6 +83,7 @@ public class Controller {
 			System.out.println("proslo");
 			return new ResponseEntity<String>(str, HttpStatus.ACCEPTED);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
 	}

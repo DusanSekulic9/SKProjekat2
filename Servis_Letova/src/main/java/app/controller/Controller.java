@@ -222,9 +222,9 @@ public class Controller {
 				
 				zaSlanje.add(idUser);
 				zaSlanje.add(brisi.getDuzinaLeta());
-				
-				jmsTemplate.convertAndSend(karteQueue, zaSlanje);
+				jmsTemplate.convertAndSend(karteQueue, idUser);
 				jmsTemplate.convertAndSend(emailQueue, zaSlanje);
+				System.out.println("broker proso");
 			}
 
 			letRepo.delete(brisi);
@@ -334,13 +334,15 @@ public class Controller {
 					}
 				}
 			}
-
-			if (searched.get(0).getAvion().getKapacitetPutnika() > searched.get(0).getKupljeneKarte()) {
-				return new ResponseEntity<Long>(searched.get(0).getIdLet(), HttpStatus.ACCEPTED);
+			synchronized (searched.get(0)) {
+				if (searched.get(0).getAvion().getKapacitetPutnika() > searched.get(0).getKupljeneKarte()) {
+					return new ResponseEntity<Long>(searched.get(0).getIdLet(), HttpStatus.ACCEPTED);
+				}
 			}
-
+			
 			return new ResponseEntity<Long>(HttpStatus.BANDWIDTH_LIMIT_EXCEEDED);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<Long>(HttpStatus.BAD_REQUEST);
 		}
 
@@ -398,14 +400,18 @@ public class Controller {
 					}
 				}
 			}
-
-			searched.get(0).setKupljeneKarte(searched.get(0).getKupljeneKarte() + 1);
-			searched.get(0).setKupiLet(true);
+			synchronized (searched.get(0)) {
+				searched.get(0).setKupljeneKarte(searched.get(0).getKupljeneKarte() + 1);
+				searched.get(0).setKupiLet(true);
+				letRepo.saveAndFlush(searched.get(0));
+			}
 			
-			letRepo.saveAndFlush(searched.get(0));
+			
+			
 
 			return new ResponseEntity<String>(HttpStatus.ACCEPTED);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
 
