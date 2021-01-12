@@ -64,7 +64,7 @@ public class Controller {
 
 			// SendEmail.sendEmail(user.getEmail());
 
-			return new ResponseEntity<>("success", HttpStatus.ACCEPTED);
+			return new ResponseEntity<>("Uspesan login", HttpStatus.ACCEPTED);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -150,7 +150,7 @@ public class Controller {
 
 			}
 
-			return new ResponseEntity<>("success", HttpStatus.ACCEPTED);
+			return new ResponseEntity<>("Uspesno editovan profil", HttpStatus.ACCEPTED);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

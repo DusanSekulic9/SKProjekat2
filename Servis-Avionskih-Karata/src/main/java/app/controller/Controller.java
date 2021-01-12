@@ -36,7 +36,7 @@ public class Controller {
 		try {
 			ResponseEntity<Long> imaLiMesta = UtilsMethods.sendGet("http://localhost:8081/kapacitet", let);
 			if(!imaLiMesta.getStatusCode().equals(HttpStatus.ACCEPTED)) {
-				return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<String>("Nema mesta u avionu",HttpStatus.BANDWIDTH_LIMIT_EXCEEDED);
 			}
 			
 			Long idLet = imaLiMesta.getBody();

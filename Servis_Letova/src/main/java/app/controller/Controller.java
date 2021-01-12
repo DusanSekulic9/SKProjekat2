@@ -51,7 +51,7 @@ public class Controller {
 	Queue karteQueue;
 
 	@GetMapping("/pretraga")
-	public ResponseEntity<String> pretraziLetove(@RequestBody PretragaLetaForm pretraga) {
+	public ResponseEntity<List<Let>> pretraziLetove(@RequestBody PretragaLetaForm pretraga) {
 		try {
 			List<Let> searched = letRepo.findAll();
 
@@ -102,17 +102,17 @@ public class Controller {
 			}
 
 			if (searched.isEmpty()) {
-				return new ResponseEntity<String>("Nema aviona za trazenu pretragu", HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<List<Let>>(searched, HttpStatus.NOT_FOUND);
 			}
 
 			// prikazi na gui searched
 			for (Let l : searched)
 				System.out.println(l.getPocetnaDestinacija());
 
-			return new ResponseEntity<String>("Avioni pronadjeni", HttpStatus.ACCEPTED);
+			return new ResponseEntity<List<Let>>(searched, HttpStatus.ACCEPTED);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<List<Let>>(HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -123,7 +123,7 @@ public class Controller {
 			ResponseEntity<Boolean> response = UtilsMethods.sendGet("http://localhost:8080/isAdmin", token);
 
 			if (!response.getBody().booleanValue()) {
-				return new ResponseEntity<String>(HttpStatus.FORBIDDEN);
+				return new ResponseEntity<String>("NO ADMIN RIGHTS",HttpStatus.FORBIDDEN);
 			}
 
 			Avion avion = avionRepo.findByNaziv(let.getAvion());
@@ -150,7 +150,7 @@ public class Controller {
 			System.out.println("Provera admina");
 			
 			if (!response.getBody().booleanValue()) {
-				return new ResponseEntity<String>(HttpStatus.FORBIDDEN);
+				return new ResponseEntity<String>("NO ADMIN RIGHTS",HttpStatus.FORBIDDEN);
 			}
 			
 			System.out.println("Proverio admina");
@@ -244,7 +244,7 @@ public class Controller {
 			ResponseEntity<Boolean> response = UtilsMethods.sendGet("http://localhost:8080/isAdmin", token);
 
 			if (!response.getBody().booleanValue()) {
-				return new ResponseEntity<String>(HttpStatus.FORBIDDEN);
+				return new ResponseEntity<String>("NO ADMIN RIGHTS",HttpStatus.FORBIDDEN);
 			}
 
 			Avion noviAvion = new Avion(avion.getNaziv(), avion.getKapacitetPutnika());
@@ -266,7 +266,7 @@ public class Controller {
 			ResponseEntity<Boolean> response = UtilsMethods.sendGet("http://localhost:8080/isAdmin", token);
 
 			if (!response.getBody().booleanValue()) {
-				return new ResponseEntity<String>(HttpStatus.FORBIDDEN);
+				return new ResponseEntity<String>("NO ADMIN RIGHTS",HttpStatus.FORBIDDEN);
 			}
 
 			Avion brisi = avionRepo.findByNaziv(avion.getNaziv());
