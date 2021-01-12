@@ -42,8 +42,10 @@ public class Controller {
 			Long idLet = imaLiMesta.getBody();
 			
 			ResponseEntity<Long> userInfo = UtilsMethods.sendGetLong("http://localhost:8080/whoAmI", token);
-			if(!userInfo.getStatusCode().equals(HttpStatus.ACCEPTED)) {
+			if(userInfo.getStatusCode().equals(HttpStatus.EXPECTATION_FAILED)) {
 				return new ResponseEntity<String>("Nemate nijednu karticu!",HttpStatus.EXPECTATION_FAILED);
+			}else if(userInfo.getStatusCode().equals(HttpStatus.FORBIDDEN)) {
+				return new ResponseEntity<String>("Los USER!",HttpStatus.FORBIDDEN);
 			}
 			
 			

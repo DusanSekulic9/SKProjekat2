@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="avion")
 public class Avion {
@@ -21,6 +23,7 @@ public class Avion {
 	private int kapacitetPutnika;
 
 	@OneToMany(mappedBy="avion")
+	@JsonIgnore
 	private List<Let> letovi;
 
 	public Avion() {

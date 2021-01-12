@@ -98,6 +98,10 @@ public class Controller {
 					.verify(token.replace(TOKEN_PREFIX, "")).getSubject();
 
 			User user = userRepo.findByEmail(email);
+			
+			if(user == null) {
+				return new ResponseEntity<Long>(HttpStatus.FORBIDDEN);
+			}
 
 			if (user.getKreditneKartice() != null && user.getKreditneKartice().isEmpty()) {
 				return new ResponseEntity<Long>(HttpStatus.EXPECTATION_FAILED);
