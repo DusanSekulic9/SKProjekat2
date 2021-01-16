@@ -19,6 +19,7 @@ public class Consumer {
 	
 	@JmsListener(destination = "email.queue")
 	public void consume(List<Object> list) {
+		System.out.println("uslo");
 		List<Long> ids = (List<Long>) list.get(0);
 		int duzina = (int) list.get(1);
 		for(Long l : ids) {
