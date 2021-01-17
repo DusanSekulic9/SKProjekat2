@@ -61,6 +61,13 @@ public class Controller {
 					encoder.encode(registrationForm.getPassword()), registrationForm.getBrojPasosa());
 
 			// cuvamo u nasoj bazi ovaj entitet
+			
+			User test = userRepo.findByEmail(registrationForm.getEmail());
+			
+			if(test != null) {
+				return new ResponseEntity<>("Mail je zauzet",HttpStatus.BAD_REQUEST);
+			}
+			
 			userRepo.saveAndFlush(user);
 
 			SendEmail.sendEmail(user.getEmail(),MailConstants.VERIFIKACIJA);

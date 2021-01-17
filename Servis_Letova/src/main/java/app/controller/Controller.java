@@ -253,6 +253,12 @@ public class Controller {
 			if (!response.getBody().booleanValue()) {
 				return new ResponseEntity<String>("NO ADMIN RIGHTS",HttpStatus.FORBIDDEN);
 			}
+			
+			Avion test = avionRepo.findByNaziv(avion.getNaziv());
+			
+			if(test != null) {
+				return new ResponseEntity<String>("Avion sa ovim imenom vec postoji!", HttpStatus.BAD_REQUEST);
+			}
 
 			Avion noviAvion = new Avion(avion.getNaziv(), avion.getKapacitetPutnika());
 
