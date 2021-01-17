@@ -17,8 +17,9 @@ public class Consumer {
 
 	
 	@JmsListener(destination = "karte.queue")
-	public void consume(Long id) {
-		List<Karta> karte = karteRepo.findAllByIdLet(id);
+	public void consume(String id) {
+		Long ID = Long.parseLong(id);
+		List<Karta> karte = karteRepo.findAllByIdLet(ID);
 		for(Karta k : karte) {
 			k.setCanceled(true);
 			karteRepo.save(k);

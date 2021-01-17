@@ -1,11 +1,11 @@
 package app.listener;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
+import app.constants.MailConstants;
 import app.email.SendEmail;
 import app.entities.User;
 import app.repository.UserRepository;
@@ -18,13 +18,15 @@ public class Consumer {
 	
 	
 	@JmsListener(destination = "email.queue")
-	public void consume(List<Object> list) {
+	public void consume(String users) {
 		System.out.println("uslo");
-		List<Long> ids = (List<Long>) list.get(0);
-		int duzina = (int) list.get(1);
-		for(Long l : ids) {
+		String[] split = users.split("\n");
+		Integer duzina = Integer.parseInt(split[1]);
+		String[] ids = split[0].split(" ");
+		for(String s : ids) {
+			Long l = Long.parseLong(s);
 			User u = userRepo.findById(l).get();
-			SendEmail.sendEmail(u.getEmail());
+			SendEmail.sendEmail(u.getEmail(), MailConstants.OTKAZAN_LET);
 			u.setPredjeneMilje(u.getPredjeneMilje() - duzina);
 			userRepo.saveAndFlush(u);
 		}

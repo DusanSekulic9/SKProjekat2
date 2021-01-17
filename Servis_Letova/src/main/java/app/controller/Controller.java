@@ -45,8 +45,10 @@ public class Controller {
 
 	@Autowired
 	JmsTemplate jmsTemplate;
+	
 	@Autowired
 	Queue emailQueue;
+	
 	@Autowired
 	Queue karteQueue;
 
@@ -213,17 +215,22 @@ public class Controller {
 				
 				System.out.println("Otkazan let");
 				
-				String[] split = ids.getBody().split(" ");
-				List<Long> idUser = new ArrayList<Long>();
-				for (String s : split)
-					idUser.add(Long.parseLong(s));
-
-				List<Object> zaSlanje = new ArrayList<Object>();
+				String users = ids.getBody();
+				users += "\n"+ brisi.getDuzinaLeta();
 				
-				zaSlanje.add(idUser);
-				zaSlanje.add(brisi.getDuzinaLeta());
-				jmsTemplate.convertAndSend(karteQueue, idUser);
-				jmsTemplate.convertAndSend(emailQueue, zaSlanje);
+				System.out.println(users);
+//				List<Long> idUser = new ArrayList<Long>();
+//				for (String s : split)
+//					idUser.add(Long.parseLong(s));
+//
+//				List<Object> zaSlanje = new ArrayList<Object>();
+//				
+//				zaSlanje.add(idUser);
+//				zaSlanje.add(brisi.getDuzinaLeta());
+				System.out.println("pokusaj queue email");
+				jmsTemplate.convertAndSend(emailQueue, "" + users);
+				System.out.println("prosao email");
+				jmsTemplate.convertAndSend(karteQueue, "" + brisi.getIdLet());
 				System.out.println("broker proso");
 			}
 

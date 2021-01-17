@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
+import app.constants.MailConstants;
 import app.email.SendEmail;
 import app.entities.Admin;
 import app.entities.KreditnaKartica;
@@ -62,7 +63,7 @@ public class Controller {
 			// cuvamo u nasoj bazi ovaj entitet
 			userRepo.saveAndFlush(user);
 
-			// SendEmail.sendEmail(user.getEmail());
+			SendEmail.sendEmail(user.getEmail(),MailConstants.VERIFIKACIJA);
 
 			return new ResponseEntity<>("Uspesan login", HttpStatus.ACCEPTED);
 		} catch (Exception e) {
@@ -139,7 +140,7 @@ public class Controller {
 				if (registrationForm.getEmail() != null
 						&& !registrationForm.getEmail().trim().equals(user.getEmail())) {
 					user.setEmail(registrationForm.getEmail());
-					// SendEmail.sendEmail(user.getEmail());
+					SendEmail.sendEmail(user.getEmail(), MailConstants.VERIFIKACIJA);
 				}
 
 				if (registrationForm.getBrojPasosa() != null
